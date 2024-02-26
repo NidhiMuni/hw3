@@ -84,31 +84,33 @@ Node* llfilter(Node* head, Comp pred);
 template <typename Comp>
 Node* llfilter(Node* head, Comp pred)
 {
-  //cout << "tf" << endl;
-  Node* result = head;
-  //cout << head << endl;
-  if (head == nullptr){
-    //cout << "hie" << endl;
-    return nullptr;
-  } else if (head->next == nullptr){
-    //cout << "hi" << endl;
+  Node* result;
+  if (head != nullptr){
+     //if the head needs to be removed, do it
     if (pred(head->val)){
-      return nullptr;
+      head = head->next;
+      result = llfilter(head, pred);
     } else {
-      return head;
+      result = head;
     }
-  } else if (pred(head->next->val)){
-    cout << head->next->val << "must go" << endl;
-    head = head->next;
-    result->next = llfilter(head, pred);
-  } else {
-    cout << head->next->val << " was " << pred(head->next->val) << endl;
-    result->next = llfilter(head->next, pred);
+
+    if (head->next == nullptr){
+      if (pred(head->val)){
+        return nullptr;
+      } else {
+        return head;
+      }
+    } else if (pred(head->next->val)){
+      head = head->next;
+      result->next = llfilter(head, pred);
+    } else {
+      result->next = llfilter(head->next, pred);
+    }
   }
     //*********************************************
     // Provide your implementation below
     //*********************************************
-    return result;
+    return nullptr;
 }
 
 #endif

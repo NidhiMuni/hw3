@@ -9,7 +9,7 @@ using namespace std;
 //*********************************************
 
 
-void llpivot(Node *&head, Node *&smaller, Node *&larger, int pivot){
+void llpivot(Node *&head, Node *&smaller, Node *&larger, int pivot){  
   smaller = nullptr;
   larger = nullptr;
   if (head != nullptr){
