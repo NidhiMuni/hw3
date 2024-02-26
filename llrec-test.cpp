@@ -4,6 +4,13 @@
 #include "llrec.h"
 using namespace std;
 
+struct IsEven
+{
+    bool operator()(int num) {
+        return (num % 2) == 0;
+    }
+};
+
 /**
  * Reads integers (separated by whitespace) from a file
  * into a linked list.
@@ -81,14 +88,32 @@ int main(int argc, char* argv[])
     // -----------------------------------------------
     // Feel free to update any code below this point
     // -----------------------------------------------
-    Node* head = readList(argv[1]);
+    /*Node* head = readList(argv[1]);
     cout << "Original list: ";
     print(head);
 
+    Node* small;
+    Node* large;
+
     // Test out your linked list code
+    llpivot(head, small, large, 10);
 
+    print(small);
+    print(large);*/
 
+    //cout << "huh" << endl;
 
+    Node* list = readList(argv[1]);
+    print(list);
+    list = llfilter(list, IsEven());
+    print(list);
+
+	//Node* small = (Node*) &list; // set to a non-null address
+	//Node* large = (Node*) &list; // set to a non-null address
+	//llpivot(list, small, large, 42);
+
+  //print(small);
+  //print(large);
     
     return 0;
 

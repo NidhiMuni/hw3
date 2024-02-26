@@ -4,6 +4,10 @@
 #define NULL 0
 #endif
 
+//DELETEEEEEE
+using namespace std;
+#include <iostream>
+
 /**
  * Node struct for both problems
  */
@@ -80,11 +84,31 @@ Node* llfilter(Node* head, Comp pred);
 template <typename Comp>
 Node* llfilter(Node* head, Comp pred)
 {
+  //cout << "tf" << endl;
+  Node* result = head;
+  //cout << head << endl;
+  if (head == nullptr){
+    //cout << "hie" << endl;
+    return nullptr;
+  } else if (head->next == nullptr){
+    //cout << "hi" << endl;
+    if (pred(head->val)){
+      return nullptr;
+    } else {
+      return head;
+    }
+  } else if (pred(head->next->val)){
+    cout << head->next->val << "must go" << endl;
+    head = head->next;
+    result->next = llfilter(head, pred);
+  } else {
+    cout << head->next->val << " was " << pred(head->next->val) << endl;
+    result->next = llfilter(head->next, pred);
+  }
     //*********************************************
     // Provide your implementation below
     //*********************************************
-
-
+    return result;
 }
 
 #endif
