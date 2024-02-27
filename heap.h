@@ -2,6 +2,11 @@
 #define HEAP_H
 #include <functional>
 #include <stdexcept>
+#include <vector>
+
+//delete
+#include <iostream>
+using namespace std;
 
 template <typename T, typename PComparator = std::less<T> >
 class Heap
@@ -59,15 +64,50 @@ public:
    */
   size_t size() const;
 
+  //delete
+  void print();
+
 private:
   /// Add whatever helper functions and data members you need below
+  size_t size_;
+  std::vector<T> heap_;
+  PComparator comp_;
+  int ary_;
 
-
-
-
+  void trickle_up(size_t index);
+  void trickle_down(size_t index);
+  void swap(size_t index1, size_t index2);
 };
 
-// Add implementation of member functions here
+template <typename T, typename PComparator>
+Heap<T, PComparator>::Heap(int m, PComparator c){
+  size_ = 0;
+  comp_ = c;
+  ary_ = m;
+}
+
+template <typename T, typename PComparator>
+Heap<T, PComparator>::~Heap(){
+  heap_.clear();
+}
+
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::push(const T& item){
+  heap_.push_back(item);
+  size_++;
+  size_t addedIndex = size_ - 1;
+  trickle_up(addedIndex);
+}
+
+template <typename T, typename PComparator>
+bool Heap<T, PComparator>::empty() const{
+  return (size_ == 0);
+}
+
+template <typename T, typename PComparator>
+size_t Heap<T, PComparator>::size() const{
+  return size_;
+}
 
 
 // We will start top() for you to handle the case of 
@@ -75,19 +115,10 @@ private:
 template <typename T, typename PComparator>
 T const & Heap<T,PComparator>::top() const
 {
-  // Here we use exceptions to handle the case of trying
-  // to access the top element of an empty heap
   if(empty()){
-    // ================================
-    // throw the appropriate exception
-    // ================================
-
-
+    throw std::underflow_error("empty");
   }
-  // If we get here we know the heap has at least 1 item
-  // Add code to return the top element
-
-
+  return heap_[0];
 
 }
 
@@ -98,15 +129,68 @@ template <typename T, typename PComparator>
 void Heap<T,PComparator>::pop()
 {
   if(empty()){
-    // ================================
-    // throw the appropriate exception
-    // ================================
+    throw std::underflow_error("empty");
+  } else if (size_ == 1){
+    heap_.erase(heap_.end() - 1);
+    size_ = size_ - 1;
+  } else {
+    swap(0, size_ - 1);
+    heap_.erase(heap_.end() - 1);
+    size_ = size_ - 1;
+    trickle_down(0);
+  }
+}
 
+template <typename T, typename PComparator>
+void Heap<T,PComparator>::trickle_up(size_t index){
+  if (index > 0){
+    size_t parentIndex = (index - 1)/ary_;
+    if (parentIndex >= 0){
+      if (comp_(heap_[index], heap_[parentIndex])){ //it is better than its parent
+        swap(index, parentIndex);
+          trickle_up(parentIndex);
+        
+      }
+    }
+  }
+}
 
+template <typename T, typename PComparator>
+void Heap<T,PComparator>::trickle_down(size_t index){
+  size_t lastIndex = size_ - 1;
+  T bestChild = heap_[index];
+  size_t bestChildIndex = index;
+
+  for (size_t q = 1; q <= (size_t)ary_; q++){
+    size_t childIndex = (ary_*index) + q;
+    if (childIndex <= lastIndex){
+      if (comp_(heap_[childIndex], bestChild)){ //this child is better than best child
+        bestChild = heap_[childIndex];
+        bestChildIndex = childIndex;
+      }
+    }
   }
 
+  if (comp_(heap_[bestChildIndex], heap_[index])){ //if the best child is better than it
+    swap(index, bestChildIndex);
+    trickle_down(bestChildIndex);
+  }
+}
 
+template <typename T, typename PComparator>
+void Heap<T,PComparator>::swap(size_t index1, size_t index2){
+  T temp = heap_[index1];
+  heap_[index1] = heap_[index2];
+  heap_[index2] = temp;
+}
 
+template <typename T, typename PComparator>
+void Heap<T,PComparator>::print(){
+  cout << "Heap results: ";
+  for (size_t i = 0; i < size_; i++){
+    cout << heap_[i] << " ";
+  }
+  cout << endl;
 }
 
 
