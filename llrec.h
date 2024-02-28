@@ -4,10 +4,6 @@
 #define NULL 0
 #endif
 
-//DELETEEEEEE
-using namespace std;
-#include <iostream>
-
 /**
  * Node struct for both problems
  */

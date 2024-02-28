@@ -4,10 +4,6 @@
 #include <stdexcept>
 #include <vector>
 
-//delete
-#include <iostream>
-using namespace std;
-
 template <typename T, typename PComparator = std::less<T> >
 class Heap
 {
@@ -64,8 +60,8 @@ public:
    */
   size_t size() const;
 
-  //delete
-  void print();
+  //for testing only
+  //void print();
 
 private:
   /// Add whatever helper functions and data members you need below
@@ -131,9 +127,11 @@ void Heap<T,PComparator>::pop()
   if(empty()){
     throw std::underflow_error("empty");
   } else if (size_ == 1){
+    //if there is only one element in the heap, just pop it
     heap_.erase(heap_.end() - 1);
     size_ = size_ - 1;
   } else {
+    //if there is more than one, pop then rearrange
     swap(0, size_ - 1);
     heap_.erase(heap_.end() - 1);
     size_ = size_ - 1;
@@ -146,10 +144,10 @@ void Heap<T,PComparator>::trickle_up(size_t index){
   if (index > 0){
     size_t parentIndex = (index - 1)/ary_;
     if (parentIndex >= 0){
-      if (comp_(heap_[index], heap_[parentIndex])){ //it is better than its parent
+      //if this element is better than its parent, swap then rearrange
+      if (comp_(heap_[index], heap_[parentIndex])){ 
         swap(index, parentIndex);
-          trickle_up(parentIndex);
-        
+        trickle_up(parentIndex);
       }
     }
   }
@@ -161,6 +159,7 @@ void Heap<T,PComparator>::trickle_down(size_t index){
   T bestChild = heap_[index];
   size_t bestChildIndex = index;
 
+  //find the best child
   for (size_t q = 1; q <= (size_t)ary_; q++){
     size_t childIndex = (ary_*index) + q;
     if (childIndex <= lastIndex){
@@ -171,7 +170,9 @@ void Heap<T,PComparator>::trickle_down(size_t index){
     }
   }
 
+  //compare the parent with the best child
   if (comp_(heap_[bestChildIndex], heap_[index])){ //if the best child is better than it
+  //swap then rearrange
     swap(index, bestChildIndex);
     trickle_down(bestChildIndex);
   }
@@ -184,14 +185,14 @@ void Heap<T,PComparator>::swap(size_t index1, size_t index2){
   heap_[index2] = temp;
 }
 
-template <typename T, typename PComparator>
+/*template <typename T, typename PComparator>
 void Heap<T,PComparator>::print(){
   cout << "Heap results: ";
   for (size_t i = 0; i < size_; i++){
     cout << heap_[i] << " ";
   }
   cout << endl;
-}
+}*/
 
 
 
